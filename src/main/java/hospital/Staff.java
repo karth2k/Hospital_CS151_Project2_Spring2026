@@ -1,6 +1,6 @@
 package hospital;
 
-public class Staff {
+public abstract class Staff {
     /*
     * Class Implemented by Karthik Muthukumar
     * ID: 016281915
@@ -37,6 +37,41 @@ public class Staff {
     }
 
 
-
+    //Setters and validation for setters
+    public void setEmployeeID(String employeeID){
+        //Makes sure employee ID isnt null or invalid
+        if(employeeID != null && !employeeID.isEmpty()){
+            this.employeeID = employeeID;
+        }
+        else{
+            System.out.println("Invalid Entry");
+        }
+    }
+    public void setName(String name){
+        //Makes sure name is a valid string
+        if(name != null && !name.isEmpty()){
+            this.name = name;
+        }
+        else{
+            System.out.println("Invalid Entry");
+        }
+    }
+    public void setDepartment(String department){
+        //Makes sure department is a valid string
+        if(department != null && !department.isEmpty()){
+            this.department = department;
+        }
+        else{
+            System.out.println("Invalid Entry");
+        }
+    }
+    public void setSalary(double salary){
+        if(salary >= 0){
+            this.salary = salary;
+        }
+        else{
+            System.out.println("Salary cannot be negative.");
+        }
+    }
 
 }
