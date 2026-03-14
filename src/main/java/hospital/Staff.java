@@ -11,15 +11,19 @@ public abstract class Staff {
     private String name;                         //Name of employee
     private String department;                   //Name of department that the staff works in
     private double salary;                       //Staff member salary
+    private boolean clockedIn;                   //If the staff member has clocked into work
+    private int hoursWorked;                     //How many hours the staff member has worked
 
 
     //Constructor
-    public Staff(String employeeID, String name, String department, double salary){
+    public Staff(String employeeID, String name, String department, double salary, boolean clockedIn, int hoursWorked){
         //Assigns parameters to instance variables
         this.employeeID = employeeID;
         this.name = name;
         this.department = department;
         this.salary = salary;
+        this.clockedIn = clockedIn;
+        this.hoursWorked = hoursWorked;
     }
 
     //Getters
@@ -34,6 +38,12 @@ public abstract class Staff {
     }
     public double getSalary(){
         return salary;
+    }
+    public boolean isClockedIn(){
+        return clockedIn;
+    }
+    public int getHoursWorked(){
+        return hoursWorked;
     }
 
 
@@ -66,12 +76,30 @@ public abstract class Staff {
         }
     }
     public void setSalary(double salary){
+        //Makes sure salary is positive
         if(salary >= 0){
             this.salary = salary;
         }
         else{
             System.out.println("Salary cannot be negative.");
         }
+    }
+    public void setClockedIn(boolean clockedIn){
+        this.clockedIn = clockedIn;
+    }
+    public void setHoursWorked(int hoursWorked){
+        if(hoursWorked >= 0){
+            this.hoursWorked = hoursWorked;
+        }
+        else{
+            System.out.println("Hours worked cannot be negative.");
+        }
+    }
+
+    //Staff methods
+    public double updateSalary(double salary){
+        //Already implemented the logic here
+        setSalary(salary);
     }
 
 }
