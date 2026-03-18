@@ -52,4 +52,28 @@ public class MaxCapacityException extends RuntimeException {
     public String getResourceType() {
         return resourceType;
     }
+
+    /**
+     * Returns whether the capacity limit is known.
+     *
+     * @return true if a specific capacity was provided, false otherwise
+     */
+    public boolean hasCapacityInfo() {
+        return maxCapacity != -1;
+    }
+
+    /**
+     * Returns a formatted summary of the exception including
+     * resource type and capacity limit if available.
+     *
+     * @return a descriptive string of this exception
+     */
+    @Override
+    public String toString() {
+        if (hasCapacityInfo()) {
+            return "MaxCapacityException: [" + resourceType + "] limit of "
+                    + maxCapacity + " reached. " + getMessage();
+        }
+        return "MaxCapacityException: " + getMessage();
+    }
 }
