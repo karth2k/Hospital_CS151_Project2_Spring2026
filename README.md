@@ -10,7 +10,7 @@ doctors, nurses, and appointments through a text-based menu.
 - `Doctor`, `Nurse` — hospital employees
 - `Patient` — represents a patient
 - `Appointment` — tracks patient-doctor meetings
-- `PayBill` (interface) — billing behavior
+- `Billable` (interface) — billing behavior
 
 ## Installation
 1. Clone the repo and open in IntelliJ or Eclipse
