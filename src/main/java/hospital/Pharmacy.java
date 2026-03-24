@@ -30,6 +30,47 @@ public class Pharmacy {
     }
 
     // -------------------------------------------------------------------------
+    // Core Methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * Restocks a medicine by the given quantity and price.
+     * If the medicine already exists, increments its quantity and updates its price.
+     * If the medicine is new, adds it as a new entry.
+     * Throws MaxCapacityException if the inventory is already full.
+     *
+     * @param medicine name of the medicine to restock
+     * @param quantity number of units to add (must be greater than 0)
+     * @param price    unit price of the medicine
+     * @throws MaxCapacityException     if inventory has reached MAX_OBJECTS
+     * @throws IllegalArgumentException if quantity is not positive
+     */
+    public void restockMedicine(String medicine, int quantity, double price) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0.");
+        }
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                medicineQuantities[i] += quantity;
+                medicinePrices[i] = price;
+                System.out.println("Restocked " + medicine + ". New quantity: "
+                        + medicineQuantities[i] + ", price updated to $"
+                        + String.format("%.2f", price));
+                return;
+            }
+        }
+        if (medicineCount >= MAX_OBJECTS) {
+            throw new MaxCapacityException("Medicine", MAX_OBJECTS);
+        }
+        medicineNames[medicineCount] = medicine;
+        medicineQuantities[medicineCount] = quantity;
+        medicinePrices[medicineCount] = price;
+        medicineCount++;
+        System.out.println("Added new medicine: " + medicine + " (quantity: " + quantity
+                + ", price: $" + String.format("%.2f", price) + ")");
+    }
+
+    // -------------------------------------------------------------------------
     // Getters & Setters
     // -------------------------------------------------------------------------
 
