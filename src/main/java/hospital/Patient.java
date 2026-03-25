@@ -215,4 +215,30 @@ public class Patient implements Billable {
     public double getOutstandingBalance() {
         return billAmount;
     }
+
+    public void viewPatientInfo() {
+        System.out.println("----- Patient Information -----");
+        System.out.println("Patient ID: " + patientId);
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Condition: " + condition);
+        System.out.println("Admitted: " + admitted);
+        System.out.println("Assigned Doctor: " + (assignedDoctor != null ? assignedDoctor.getName() : "None"));
+        System.out.println("Diagnosis: " + diagnosis);
+        System.out.println("Prescribed Medicine: " + prescribedMedicine);
+        System.out.println("Outstanding Balance: $" + String.format("%.2f", billAmount));
+    }
+
+    @Override
+    public String toString() {
+        return "Patient ID: " + patientId
+                + ", Name: " + name
+                + ", Age: " + age
+                + ", Condition: " + condition
+                + ", Admitted: " + admitted
+                + ", Assigned Doctor: " + (assignedDoctor != null ? assignedDoctor.getName() : "None")
+                + ", Diagnosis: " + diagnosis
+                + ", Prescribed Medicine: " + prescribedMedicine
+                + ", Bill Amount: $" + String.format("%.2f", billAmount);
+    }
 }
