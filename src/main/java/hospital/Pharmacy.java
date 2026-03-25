@@ -91,6 +91,7 @@ public class Pharmacy implements Billable {
             if (medicineNames[i].equalsIgnoreCase(medicine)) {
                 medicineQuantities[i] += quantity;
                 medicinePrices[i] = price;
+                payBill(quantity * price);
                 System.out.println("Restocked " + medicine + ". New quantity: "
                         + medicineQuantities[i] + ", price updated to $"
                         + String.format("%.2f", price));
@@ -104,6 +105,7 @@ public class Pharmacy implements Billable {
         medicineQuantities[medicineCount] = quantity;
         medicinePrices[medicineCount] = price;
         medicineCount++;
+        payBill(quantity * price);
         System.out.println("Added new medicine: " + medicine + " (quantity: " + quantity
                 + ", price: $" + String.format("%.2f", price) + ")");
     }
