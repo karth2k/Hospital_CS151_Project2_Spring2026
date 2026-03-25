@@ -175,5 +175,60 @@ public class Hospital {
         return null;
     }
 
+    //Core functionality
+    public void addPatient(Patient patient){
+        //Adds patient, makes sure its not null and also makes sure to throw exception if there are 100 patients already
+        if(patient == null){
+            System.out.println("Cant add null patient.");
+            return;
+        }
+        if(patientCount >= MAX_OBJECTS) {
+            throw new MaxCapacityException("Patient", MAX_OBJECTS);
+        }
+        //checks if patient already exists in patient array
+        if(hasPatientId(patient.getPatientId())) {
+            System.out.println("Patient with ID " + patient.getPatientId() + " already exists.");
+            return;
+        }
+
+        //next open slot in array is allocatd to patient and patient count is increased
+        patients[patientCount] = patient;
+        patientCount++;
+
+        System.out.println("Patient " + patient.getName() + " added to " + hospitalName + ".");
+    }
+
+    public void removePatient(String patientId) {
+        //removes a patient given a valid patient ID (checks for null/empty spaces)
+        if(patientId == null || patientId.trim().isEmpty()) {
+            System.out.println("Patient ID cannot be empty.");
+            return;
+        }
+
+        //Removes patient from the patients array if valid id is found/matched for the patient in patient array
+        for(int i = 0; i < patientCount; i++) {
+            if(patients[i] != null && patients[i].getPatientId().equalsIgnoreCase(patientId.trim())) {
+                Patient removedPatient = patients[i];
+
+                if(removedPatient.getAssignedDoctor() != null) {
+                    removedPatient.getAssignedDoctor().removePatient(removedPatient);
+                }
+
+                //fixes array slots starting from slot patient was deletd
+                for(int j = i; j < patientCount - 1; j++) {
+                    patients[j] = patients[j + 1];
+                }
+
+                //decrements patient count and makes the open spot equal to null so it can be used later on if we do add patient
+                patients[patientCount - 1] = null;
+                patientCount--;
+
+                System.out.println("Patient " + removedPatient.getName() + " removed from the hospital.");
+                return;
+            }
+        }
+        //if patient isnt found then throws patient not found exception
+        throw new PatientNotFoundException(patientId, true);
+    }
 
 }
