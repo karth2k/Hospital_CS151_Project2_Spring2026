@@ -111,6 +111,69 @@ public class Pharmacy implements Billable {
     }
 
     /**
+     * Dispenses one unit of a medicine to a patient.
+     * Decrements stock by 1, charges the patient the unit price,
+     * and records the income as pharmacy revenue.
+     * Throws OutOfStockException if the medicine is unavailable.
+     *
+     * @param patient  the patient receiving the medicine
+     * @param medicine name of the medicine to dispense
+     * @throws OutOfStockException if the medicine is out of stock or not found
+     */
+    public void dispenseMedicine(Patient patient, String medicine) {
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                if (medicineQuantities[i] <= 0) {
+                    throw new OutOfStockException(medicine, true);
+                }
+                medicineQuantities[i]--;
+                double price = medicinePrices[i];
+                patient.addCharge(price);
+                addCharge(price);
+                System.out.println("Dispensed " + medicine + " to " + patient.getName()
+                        + ". Charge: $" + String.format("%.2f", price));
+                return;
+            }
+        }
+        throw new OutOfStockException(medicine, true);
+    }
+
+    /**
+     * Returns the unit price of the given medicine.
+     *
+     * @param medicine name of the medicine
+     * @return the unit price, or -1 if the medicine is not found
+     */
+    public double findMedicinePrice(String medicine) {
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                return medicinePrices[i];
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Prints a formatted table of all medicines in inventory,
+     * showing name, quantity, and unit price.
+     */
+    public void viewInventory() {
+        if (medicineCount == 0) {
+            System.out.println("Pharmacy inventory is empty.");
+            return;
+        }
+        System.out.println("=== Pharmacy Inventory [" + pharmacyId + "] ===");
+        System.out.printf("%-25s %-12s %-10s%n", "Medicine", "Quantity", "Price");
+        System.out.println("-".repeat(50));
+        for (int i = 0; i < medicineCount; i++) {
+            System.out.printf("%-25s %-12d $%-9.2f%n",
+                    medicineNames[i], medicineQuantities[i], medicinePrices[i]);
+        }
+        System.out.println("-".repeat(50));
+        System.out.println("Total medicines: " + medicineCount);
+    }
+
+    /**
      * Checks whether a medicine is available (quantity > 0).
      * Prints the current quantity to the console.
      *
@@ -126,6 +189,32 @@ public class Pharmacy implements Billable {
             }
         }
         System.out.println(medicine + " is not in the pharmacy inventory.");
+        return false;
+    }
+
+    /**
+     * Removes a medicine entirely from the inventory by shifting the arrays.
+     *
+     * @param medicine name of the medicine to remove
+     * @return true if the medicine was found and removed, false otherwise
+     */
+    public boolean removeMedicine(String medicine) {
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                for (int j = i; j < medicineCount - 1; j++) {
+                    medicineNames[j] = medicineNames[j + 1];
+                    medicineQuantities[j] = medicineQuantities[j + 1];
+                    medicinePrices[j] = medicinePrices[j + 1];
+                }
+                medicineNames[medicineCount - 1] = null;
+                medicineQuantities[medicineCount - 1] = 0;
+                medicinePrices[medicineCount - 1] = 0.0;
+                medicineCount--;
+                System.out.println(medicine + " has been removed from inventory.");
+                return true;
+            }
+        }
+        System.out.println(medicine + " not found in inventory.");
         return false;
     }
 
