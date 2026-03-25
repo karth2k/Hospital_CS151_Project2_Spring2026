@@ -7,9 +7,6 @@ public class Doctor extends Staff{
      * username: @seantadina
      *********************************************/
 
-    // max number of patients or appointments this doctor can store
-    private static final int MAX_OBJECTS = 100;
-
     // below are the doctor fields
     private String specialization;
     private String licenseNumber;
