@@ -130,7 +130,7 @@ public abstract class Staff {
 
     public void viewStaffInfo() {
         //Prints out staff information
-        System.out.println("----- Staff Information -----");
+        System.out.println("------ Staff Information ------");
         System.out.println("Employee ID: " + employeeID);
         System.out.println("Name: " + name);
         System.out.println("Department: " + department);

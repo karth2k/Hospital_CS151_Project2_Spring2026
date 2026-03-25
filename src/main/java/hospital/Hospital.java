@@ -238,11 +238,11 @@ public class Hospital {
             return;
         }
         if(doctorCount >= MAX_OBJECTS) {
-            throw new MaxCapacityException("Patient", MAX_OBJECTS);
+            throw new MaxCapacityException("Doctor", MAX_OBJECTS);
         }
         //checks if doctor already exists in doctor array
         if(hasDoctorId(doctor.getEmployeeID())) {
-            System.out.println("Patient with ID " + doctor.getEmployeeID() + " already exists.");
+            System.out.println("Doctor with ID " + doctor.getEmployeeID() + " already exists.");
             return;
         }
 
@@ -370,6 +370,97 @@ public class Hospital {
         for (int i = 0; i < doctorCount; i++) {
             System.out.println((i + 1) + ". " + doctors[i]);
         }
+    }
+    //Helpers for Main.java
+    public void admitPatient(String patientId) {
+        //finds and returns patient then admits them
+        Patient patient = findPatient(patientId);
+        if(patient != null) {
+            patient.admitPatient();
+        }
+    }
+
+    public void dischargePatient(String patientId) {
+        //finds and returns patient then discharges them
+        Patient patient = findPatient(patientId);
+        if(patient != null) {
+            patient.dischargePatient();
+        }
+    }
+
+    public void payPatientBill(String patientId, double amount) {
+        //finds and returns patient then pays the bill
+        Patient patient = findPatient(patientId);
+        if(patient != null) {
+            patient.payBill(amount);
+        }
+    }
+
+    public void assignDoctorToPatient(String patientId, String doctorId) {
+        //finds the patient and doctor then returns them then assigns the doctor to the patient
+        Patient patient = findPatient(patientId);
+        Doctor doctor = findDoctor(doctorId);
+
+        if (patient != null && doctor != null) {
+            patient.assignDoctor(doctor);
+        }
+    }
+
+    public void displayAllNurses() {
+        //prints all nurses in the nurse array if more than 0
+        if (nurseCount == 0) {
+            System.out.println("No nurses found.");
+            return;
+        }
+
+        System.out.println("------ All Nurses ------");
+        for (int i = 0; i < nurseCount; i++) {
+            System.out.println((i + 1) + ". " + nurses[i]);
+        }
+    }
+
+    public void displayAllAppointments() {
+        //prints all appointments in appointments array if there is more than 0
+        if (appointmentCount == 0) {
+            System.out.println("No appointments found.");
+            return;
+        }
+
+        System.out.println("------ All Appointments ------");
+        for (int i = 0; i < appointmentCount; i++) {
+            appointments[i].viewDetails();
+        }
+    }
+
+    public void cancelAppointment(int appointmentId) {
+        //finds and validates the appointment and returns it. then cancels the appointment
+        Appointment appointment = findAppointment(appointmentId);
+        if (appointment != null) {
+            appointment.cancel();
+        }
+    }
+
+    public void rescheduleAppointment(int appointmentId, String newDate) {
+        //finds and validates the appointment and returns it. then reschedueles it
+        Appointment appointment = findAppointment(appointmentId);
+        if (appointment != null) {
+            appointment.reschedule(newDate);
+        }
+    }
+
+    public void completeAppointment(int appointmentId) {
+        //finds and validates the appointment and returns it, then marks as complete
+        Appointment appointment = findAppointment(appointmentId);
+        if (appointment != null) {
+            appointment.complete();
+        }
+    }
+
+    @Override
+    public String toString() {
+        //Overrides toString to print out the hospital details
+        return "Hospital Name: " + hospitalName + ", Patients: " + patientCount + ", Doctors: " + doctorCount
+                + ", Nurses: " + nurseCount + ", Appointments: " + appointmentCount + ", Pharmacy: " + pharmacy;
     }
 
 }
