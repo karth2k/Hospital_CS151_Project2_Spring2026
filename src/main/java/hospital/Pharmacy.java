@@ -192,6 +192,32 @@ public class Pharmacy implements Billable {
         return false;
     }
 
+    /**
+     * Removes a medicine entirely from the inventory by shifting the arrays.
+     *
+     * @param medicine name of the medicine to remove
+     * @return true if the medicine was found and removed, false otherwise
+     */
+    public boolean removeMedicine(String medicine) {
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                for (int j = i; j < medicineCount - 1; j++) {
+                    medicineNames[j] = medicineNames[j + 1];
+                    medicineQuantities[j] = medicineQuantities[j + 1];
+                    medicinePrices[j] = medicinePrices[j + 1];
+                }
+                medicineNames[medicineCount - 1] = null;
+                medicineQuantities[medicineCount - 1] = 0;
+                medicinePrices[medicineCount - 1] = 0.0;
+                medicineCount--;
+                System.out.println(medicine + " has been removed from inventory.");
+                return true;
+            }
+        }
+        System.out.println(medicine + " not found in inventory.");
+        return false;
+    }
+
     // -------------------------------------------------------------------------
     // Getters & Setters
     // -------------------------------------------------------------------------
