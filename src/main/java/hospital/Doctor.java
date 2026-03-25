@@ -1,6 +1,6 @@
 package hospital;
 
-public class Doctor extends Staff{
+public class Doctor extends Staff {
     /*********************************************
      * author: Sean Tadina
      * id: 018950802
@@ -26,10 +26,12 @@ public class Doctor extends Staff{
         // initializes staff fields from parent class
         super(employeeID, name, department, salary);
 
-        // initializes doctor fields
-        this.specialization = specialization;
-        this.licenseNumber = licenseNumber;
-        this.roomNumber = roomNumber;
+        this.specialization = (specialization != null && !specialization.trim().isEmpty())
+                ? specialization.trim() : "General";
+        this.licenseNumber = (licenseNumber != null && !licenseNumber.trim().isEmpty())
+                ? licenseNumber.trim() : "Unknown";
+        this.roomNumber = (roomNumber != null && !roomNumber.trim().isEmpty())
+                ? roomNumber.trim() : "Unassigned";
         this.available = true;
 
         // initializes arrays and counters
@@ -111,6 +113,11 @@ public class Doctor extends Staff{
         this.available = available;
     }
 
+    // helper to check if this doctor is responsible for the patient
+    private boolean managesPatient(Patient patient) {
+        return patient != null && (hasPatient(patient) || patient.getAssignedDoctor() == this);
+    }
+
     // adds a patient to this doctor's list
     public void assignPatient(Patient patient) {
         if (patient == null) {
@@ -119,7 +126,11 @@ public class Doctor extends Staff{
         }
 
         if (hasPatient(patient)) {
-            System.out.println("This patient is already assigned to Dr. " + getName() + ".");
+            if (patient.getAssignedDoctor() != this) {
+                patient.assignDoctor(this);
+            } else {
+                System.out.println("This patient is already assigned to Dr. " + getName() + ".");
+            }
             return;
         }
 
@@ -129,7 +140,13 @@ public class Doctor extends Staff{
 
         assignedPatients[patientCount] = patient;
         patientCount++;
-        System.out.println("Patient assigned to Dr. " + getName() + ".");
+
+        // sync the patient object with this doctor
+        if (patient.getAssignedDoctor() != this) {
+            patient.assignDoctor(this);
+        } else {
+            System.out.println("Patient " + patient.getName() + " assigned to Dr. " + getName() + ".");
+        }
     }
 
     // removes a patient from the doctor's list
@@ -141,13 +158,13 @@ public class Doctor extends Staff{
 
         for (int i = 0; i < patientCount; i++) {
             if (assignedPatients[i] == patient) {
-                // shift everything left after removal
                 for (int j = i; j < patientCount - 1; j++) {
                     assignedPatients[j] = assignedPatients[j + 1];
                 }
 
                 assignedPatients[patientCount - 1] = null;
                 patientCount--;
+
                 System.out.println("Patient removed from Dr. " + getName() + "'s list.");
                 return;
             }
@@ -167,6 +184,7 @@ public class Doctor extends Staff{
                 return true;
             }
         }
+
         return false;
     }
 
@@ -182,28 +200,45 @@ public class Doctor extends Staff{
                 return true;
             }
         }
+
         return false;
     }
 
-    // simple method for diagnosing a patient
+    // diagnoses a patient with a generic message
     public void diagnosePatient(Patient patient) {
+        diagnosePatient(patient, "Diagnosis recorded by Dr. " + getName());
+    }
+
+    // diagnoses a patient with a specific diagnosis
+    public void diagnosePatient(Patient patient, String diagnosis) {
         if (patient == null) {
             System.out.println("Cannot diagnose a null patient.");
             return;
         }
 
-        if (!hasPatient(patient)) {
+        if (!managesPatient(patient)) {
             System.out.println("Patient must be assigned to Dr. " + getName() + " before diagnosis.");
             return;
         }
 
-        System.out.println("Dr. " + getName() + " examined the patient and recorded a diagnosis.");
+        if (diagnosis == null || diagnosis.trim().isEmpty()) {
+            System.out.println("Diagnosis cannot be empty.");
+            return;
+        }
+
+        patient.updateDiagnosis(diagnosis);
+        System.out.println("Dr. " + getName() + " diagnosed patient " + patient.getName() + ".");
     }
 
-    // simple method for prescribing medicine
+    // prescribes medicine to a patient
     public void prescribeMedicine(Patient patient, String medicine) {
         if (patient == null) {
             System.out.println("Cannot prescribe medicine to a null patient.");
+            return;
+        }
+
+        if (!managesPatient(patient)) {
+            System.out.println("Patient must be assigned to Dr. " + getName() + " before prescribing medicine.");
             return;
         }
 
@@ -212,27 +247,24 @@ public class Doctor extends Staff{
             return;
         }
 
-        if (!hasPatient(patient)) {
-            System.out.println("Patient must be assigned to Dr. " + getName() + " before prescribing medicine.");
-            return;
-        }
-
-        System.out.println("Dr. " + getName() + " prescribed " + medicine + " to the patient.");
+        patient.updatePrescription(medicine);
+        System.out.println("Dr. " + getName() + " prescribed " + medicine + " to " + patient.getName() + ".");
     }
 
-    // simple method for approving discharge
+    // approves a patient's discharge
     public void approveDischarge(Patient patient) {
         if (patient == null) {
             System.out.println("Cannot approve discharge for a null patient.");
             return;
         }
 
-        if (!hasPatient(patient)) {
+        if (!managesPatient(patient)) {
             System.out.println("Patient must be assigned to Dr. " + getName() + " before discharge approval.");
             return;
         }
 
-        System.out.println("Dr. " + getName() + " approved the patient's discharge.");
+        patient.dischargePatient();
+        System.out.println("Dr. " + getName() + " approved discharge for " + patient.getName() + ".");
     }
 
     // adds an appointment to the doctor's schedule
@@ -263,8 +295,11 @@ public class Doctor extends Staff{
 
         // auto assign the patient if needed
         Patient patient = appointment.getPatient();
+
         if (patient != null && !hasPatient(patient)) {
             assignPatient(patient);
+        } else if (patient != null && patient.getAssignedDoctor() != this) {
+            patient.assignDoctor(this);
         }
 
         appointments[appointmentCount] = appointment;
@@ -277,10 +312,7 @@ public class Doctor extends Staff{
 
     @Override
     public void viewStaffInfo() {
-        // show parent info first
         super.viewStaffInfo();
-
-        // then show doctor info
         System.out.println("Specialization: " + specialization);
         System.out.println("License Number: " + licenseNumber);
         System.out.println("Room Number: " + roomNumber);
@@ -291,7 +323,6 @@ public class Doctor extends Staff{
 
     @Override
     public void performDuties() {
-        // required method from staff (duties)
         System.out.println("Doctor " + getName() + " is performing duties.");
         System.out.println(" - diagnosing patients");
         System.out.println(" - prescribing medicine");
