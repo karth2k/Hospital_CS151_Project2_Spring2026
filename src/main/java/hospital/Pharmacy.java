@@ -70,6 +70,25 @@ public class Pharmacy {
                 + ", price: $" + String.format("%.2f", price) + ")");
     }
 
+    /**
+     * Checks whether a medicine is available (quantity > 0).
+     * Prints the current quantity to the console.
+     *
+     * @param medicine name of the medicine to check
+     * @return true if available, false if out of stock or not found
+     */
+    public boolean checkAvailability(String medicine) {
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                System.out.println(medicine + " — available quantity: "
+                        + medicineQuantities[i]);
+                return medicineQuantities[i] > 0;
+            }
+        }
+        System.out.println(medicine + " is not in the pharmacy inventory.");
+        return false;
+    }
+
     // -------------------------------------------------------------------------
     // Getters & Setters
     // -------------------------------------------------------------------------
