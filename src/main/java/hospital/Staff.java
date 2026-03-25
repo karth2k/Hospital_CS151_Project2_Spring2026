@@ -6,6 +6,8 @@ public abstract class Staff {
     * ID: 016281915
     */
 
+    protected static final int MAX_OBJECTS = 100;
+
     //Attributes
     private String employeeID;                   //ID of employee
     private String name;                         //Name of employee
