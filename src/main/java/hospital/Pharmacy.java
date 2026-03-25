@@ -111,6 +111,34 @@ public class Pharmacy implements Billable {
     }
 
     /**
+     * Dispenses one unit of a medicine to a patient.
+     * Decrements stock by 1, charges the patient the unit price,
+     * and records the income as pharmacy revenue.
+     * Throws OutOfStockException if the medicine is unavailable.
+     *
+     * @param patient  the patient receiving the medicine
+     * @param medicine name of the medicine to dispense
+     * @throws OutOfStockException if the medicine is out of stock or not found
+     */
+    public void dispenseMedicine(Patient patient, String medicine) {
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                if (medicineQuantities[i] <= 0) {
+                    throw new OutOfStockException(medicine, true);
+                }
+                medicineQuantities[i]--;
+                double price = medicinePrices[i];
+                patient.addCharge(price);
+                addCharge(price);
+                System.out.println("Dispensed " + medicine + " to " + patient.getName()
+                        + ". Charge: $" + String.format("%.2f", price));
+                return;
+            }
+        }
+        throw new OutOfStockException(medicine, true);
+    }
+
+    /**
      * Returns the unit price of the given medicine.
      *
      * @param medicine name of the medicine
