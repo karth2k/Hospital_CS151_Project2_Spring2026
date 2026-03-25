@@ -7,6 +7,7 @@ public class Patient implements Billable {
      * username: @seantadina
      *********************************************/
 
+    // fields
     private String patientId;
     private String name;
     private int age;
@@ -18,6 +19,7 @@ public class Patient implements Billable {
     private String prescribedMedicine;
 
 
+    // constructor
     public Patient(String patientId, String name, int age, String condition) {
         this.patientId = (patientId != null && !patientId.trim().isEmpty()) ? patientId.trim() : "Unknown";
         this.name = (name != null && !name.trim().isEmpty()) ? name.trim() : "Unknown";
@@ -30,6 +32,7 @@ public class Patient implements Billable {
         this.prescribedMedicine = "None";
     }
 
+    // getters
     public String getPatientId() {
         return patientId;
     }
@@ -66,6 +69,7 @@ public class Patient implements Billable {
         return prescribedMedicine;
     }
 
+    // setters
     public void setPatientId(String patientId) {
         if (patientId != null && !patientId.trim().isEmpty()) {
             this.patientId = patientId.trim();
@@ -110,6 +114,7 @@ public class Patient implements Billable {
         this.admitted = admitted;
     }
 
+    // admits the patient
     public void admitPatient() {
         if (admitted) {
             System.out.println(name + " is already admitted.");
@@ -120,6 +125,7 @@ public class Patient implements Billable {
         System.out.println(name + " has been admitted.");
     }
 
+    // discharges the patient
     public void dischargePatient() {
         if (!admitted) {
             System.out.println(name + " is not currently admitted.");
@@ -130,6 +136,7 @@ public class Patient implements Billable {
         System.out.println(name + " has been discharged.");
     }
 
+    // updates diagnosis
     public void updateDiagnosis(String diagnosis) {
         if (diagnosis == null || diagnosis.trim().isEmpty()) {
             System.out.println("Diagnosis cannot be empty.");
@@ -140,6 +147,7 @@ public class Patient implements Billable {
         System.out.println("Diagnosis updated for " + name + ".");
     }
 
+    // updates prescription
     public void updatePrescription(String prescribedMedicine) {
         if (prescribedMedicine == null || prescribedMedicine.trim().isEmpty()) {
             System.out.println("Prescription cannot be empty.");
@@ -150,6 +158,7 @@ public class Patient implements Billable {
         System.out.println("Prescription updated for " + name + ".");
     }
 
+    // assigns a doctor to the patient
     public void assignDoctor(Doctor doctor) {
         if (doctor == null) {
             System.out.println("Cannot assign a null doctor.");
@@ -176,6 +185,7 @@ public class Patient implements Billable {
         System.out.println("Dr. " + doctor.getName() + " has been assigned to patient " + name + ".");
     }
 
+    // adds money to patient's bill
     @Override
     public void addCharge(double amount) {
         if (amount <= 0) {
@@ -189,6 +199,7 @@ public class Patient implements Billable {
                 + String.format("%.2f", billAmount));
     }
 
+    // gives option to pay full or partial
     @Override
     public void payBill(double amount) {
         if (amount <= 0) {
@@ -211,11 +222,13 @@ public class Patient implements Billable {
                 + ". Remaining balance: $" + String.format("%.2f", billAmount));
     }
 
+    // returns unpaid balance
     @Override
     public double getOutstandingBalance() {
         return billAmount;
     }
 
+    // menu view for patient info
     public void viewPatientInfo() {
         System.out.println("----- Patient Information -----");
         System.out.println("Patient ID: " + patientId);
