@@ -6,7 +6,7 @@ package hospital;
  * author: Qingheng Fang
  * id: 015323763
  */
-public class Pharmacy {
+public class Pharmacy implements Billable {
 
     public static final int MAX_OBJECTS = 100;
 
@@ -15,6 +15,8 @@ public class Pharmacy {
     private int[] medicineQuantities;
     private double[] medicinePrices;
     private int medicineCount;
+    private double totalRevenue;
+    private double totalExpenses;
 
     /**
      * Constructs a Pharmacy with the given ID and empty inventory.
@@ -27,6 +29,42 @@ public class Pharmacy {
         this.medicineQuantities = new int[MAX_OBJECTS];
         this.medicinePrices = new double[MAX_OBJECTS];
         this.medicineCount = 0;
+        this.totalRevenue = 0.0;
+        this.totalExpenses = 0.0;
+    }
+
+    // -------------------------------------------------------------------------
+    // Billable Interface Methods
+    // -------------------------------------------------------------------------
+
+    /**
+     * Records income earned when dispensing medicine to a patient.
+     *
+     * @param amount the price charged for the dispensed medicine
+     */
+    @Override
+    public void addCharge(double amount) {
+        totalRevenue += amount;
+    }
+
+    /**
+     * Records an expense paid when restocking medicine from a supplier.
+     *
+     * @param amount the cost of the restock
+     */
+    @Override
+    public void payBill(double amount) {
+        totalExpenses += amount;
+    }
+
+    /**
+     * Returns the net balance: total revenue minus total expenses.
+     *
+     * @return totalRevenue - totalExpenses
+     */
+    @Override
+    public double getOutstandingBalance() {
+        return totalRevenue - totalExpenses;
     }
 
     // -------------------------------------------------------------------------
