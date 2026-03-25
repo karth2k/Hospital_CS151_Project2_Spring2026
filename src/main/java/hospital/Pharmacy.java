@@ -126,6 +126,26 @@ public class Pharmacy implements Billable {
     }
 
     /**
+     * Prints a formatted table of all medicines in inventory,
+     * showing name, quantity, and unit price.
+     */
+    public void viewInventory() {
+        if (medicineCount == 0) {
+            System.out.println("Pharmacy inventory is empty.");
+            return;
+        }
+        System.out.println("=== Pharmacy Inventory [" + pharmacyId + "] ===");
+        System.out.printf("%-25s %-12s %-10s%n", "Medicine", "Quantity", "Price");
+        System.out.println("-".repeat(50));
+        for (int i = 0; i < medicineCount; i++) {
+            System.out.printf("%-25s %-12d $%-9.2f%n",
+                    medicineNames[i], medicineQuantities[i], medicinePrices[i]);
+        }
+        System.out.println("-".repeat(50));
+        System.out.println("Total medicines: " + medicineCount);
+    }
+
+    /**
      * Checks whether a medicine is available (quantity > 0).
      * Prints the current quantity to the console.
      *
