@@ -231,4 +231,50 @@ public class Hospital {
         throw new PatientNotFoundException(patientId, true);
     }
 
+    public void addDoctor(Doctor doctor){
+        //Adds doctor, makes sure its not null and also makes sure to throw exception if there are 100 doctors already
+        if(doctor == null){
+            System.out.println("Cannot add a null doctor");
+            return;
+        }
+        if(doctorCount >= MAX_OBJECTS) {
+            throw new MaxCapacityException("Patient", MAX_OBJECTS);
+        }
+        //checks if doctor already exists in doctor array
+        if(hasDoctorId(doctor.getEmployeeID())) {
+            System.out.println("Patient with ID " + doctor.getEmployeeID() + " already exists.");
+            return;
+        }
+
+        //Adds doctor to doctors array and increments doctor count
+        doctors[doctorCount] = doctor;
+        doctorCount++;
+
+        System.out.println("Doctor " + doctor.getName() + " added to " + hospitalName + ".");
+    }
+
+    public void addNurse(Nurse nurse) {
+        //Adds nurse, makes sure its not null and also makes sure to throw exception if there are 100 nurses already
+        if (nurse == null) {
+            System.out.println("Cannot add a null nurse.");
+            return;
+        }
+
+        if (nurseCount >= MAX_OBJECTS) {
+            throw new MaxCapacityException("Nurse", MAX_OBJECTS);
+        }
+
+        //checks if nurse already exists in nurse array
+        if (hasNurseId(nurse.getEmployeeID())) {
+            System.out.println("Nurse with ID " + nurse.getEmployeeID() + " already exists.");
+            return;
+        }
+
+        //Adds nurse to nurses array and increments nurse count
+        nurses[nurseCount] = nurse;
+        nurseCount++;
+
+        System.out.println("Nurse " + nurse.getName() + " added to " + hospitalName + ".");
+    }
+
 }
