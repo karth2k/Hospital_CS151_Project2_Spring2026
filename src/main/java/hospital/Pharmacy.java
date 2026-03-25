@@ -8,7 +8,7 @@ package hospital;
  */
 public class Pharmacy implements Billable {
 
-    public static final int MAX_OBJECTS = 100;
+
 
     private String pharmacyId;
     private String[] medicineNames;
@@ -25,9 +25,9 @@ public class Pharmacy implements Billable {
      */
     public Pharmacy(String pharmacyId) {
         this.pharmacyId = pharmacyId;
-        this.medicineNames = new String[MAX_OBJECTS];
-        this.medicineQuantities = new int[MAX_OBJECTS];
-        this.medicinePrices = new double[MAX_OBJECTS];
+        this.medicineNames = new String[Hospital.MAX_OBJECTS];
+        this.medicineQuantities = new int[Hospital.MAX_OBJECTS];
+        this.medicinePrices = new double[Hospital.MAX_OBJECTS];
         this.medicineCount = 0;
         this.totalRevenue = 0.0;
         this.totalExpenses = 0.0;
@@ -98,8 +98,8 @@ public class Pharmacy implements Billable {
                 return;
             }
         }
-        if (medicineCount >= MAX_OBJECTS) {
-            throw new MaxCapacityException("Medicine", MAX_OBJECTS);
+        if (medicineCount >= Hospital.MAX_OBJECTS) {
+            throw new MaxCapacityException("Medicine", Hospital.MAX_OBJECTS);
         }
         medicineNames[medicineCount] = medicine;
         medicineQuantities[medicineCount] = quantity;

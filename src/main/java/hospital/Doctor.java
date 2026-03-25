@@ -35,8 +35,8 @@ public class Doctor extends Staff {
         this.available = true;
 
         // initializes arrays and counters
-        this.assignedPatients = new Patient[MAX_OBJECTS];
-        this.appointments = new Appointment[MAX_OBJECTS];
+        this.assignedPatients = new Patient[Hospital.MAX_OBJECTS];
+        this.appointments = new Appointment[Hospital.MAX_OBJECTS];
         this.patientCount = 0;
         this.appointmentCount = 0;
     }
@@ -134,8 +134,8 @@ public class Doctor extends Staff {
             return;
         }
 
-        if (patientCount >= MAX_OBJECTS) {
-            throw new MaxCapacityException("Patient", MAX_OBJECTS);
+        if (patientCount >= Hospital.MAX_OBJECTS) {
+            throw new MaxCapacityException("Patient", Hospital.MAX_OBJECTS);
         }
 
         assignedPatients[patientCount] = patient;
@@ -289,8 +289,8 @@ public class Doctor extends Staff {
             return;
         }
 
-        if (appointmentCount >= MAX_OBJECTS) {
-            throw new MaxCapacityException("Appointment", MAX_OBJECTS);
+        if (appointmentCount >= Hospital.MAX_OBJECTS) {
+            throw new MaxCapacityException("Appointment", Hospital.MAX_OBJECTS);
         }
 
         // auto assign the patient if needed
