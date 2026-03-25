@@ -109,4 +109,110 @@ public class Patient implements Billable {
     public void setAdmitted(boolean admitted) {
         this.admitted = admitted;
     }
+
+    public void admitPatient() {
+        if (admitted) {
+            System.out.println(name + " is already admitted.");
+            return;
+        }
+
+        admitted = true;
+        System.out.println(name + " has been admitted.");
+    }
+
+    public void dischargePatient() {
+        if (!admitted) {
+            System.out.println(name + " is not currently admitted.");
+            return;
+        }
+
+        admitted = false;
+        System.out.println(name + " has been discharged.");
+    }
+
+    public void updateDiagnosis(String diagnosis) {
+        if (diagnosis == null || diagnosis.trim().isEmpty()) {
+            System.out.println("Diagnosis cannot be empty.");
+            return;
+        }
+
+        this.diagnosis = diagnosis.trim();
+        System.out.println("Diagnosis updated for " + name + ".");
+    }
+
+    public void updatePrescription(String prescribedMedicine) {
+        if (prescribedMedicine == null || prescribedMedicine.trim().isEmpty()) {
+            System.out.println("Prescription cannot be empty.");
+            return;
+        }
+
+        this.prescribedMedicine = prescribedMedicine.trim();
+        System.out.println("Prescription updated for " + name + ".");
+    }
+
+    public void assignDoctor(Doctor doctor) {
+        if (doctor == null) {
+            System.out.println("Cannot assign a null doctor.");
+            return;
+        }
+
+        if (assignedDoctor == doctor) {
+            System.out.println("Dr. " + doctor.getName() + " is already assigned to " + name + ".");
+            return;
+        }
+
+        Doctor previousDoctor = assignedDoctor;
+
+        if (!doctor.hasPatient(this)) {
+            doctor.assignPatient(this);
+        }
+
+        assignedDoctor = doctor;
+
+        if (previousDoctor != null && previousDoctor != doctor && previousDoctor.hasPatient(this)) {
+            previousDoctor.removePatient(this);
+        }
+
+        System.out.println("Dr. " + doctor.getName() + " has been assigned to patient " + name + ".");
+    }
+
+    @Override
+    public void addCharge(double amount) {
+        if (amount <= 0) {
+            System.out.println("Charge amount must be greater than 0.");
+            return;
+        }
+
+        billAmount += amount;
+        System.out.println("$" + String.format("%.2f", amount)
+                + " added to " + name + "'s bill. New balance: $"
+                + String.format("%.2f", billAmount));
+    }
+
+    @Override
+    public void payBill(double amount) {
+        if (amount <= 0) {
+            System.out.println("Payment amount must be greater than 0.");
+            return;
+        }
+
+        if (billAmount <= 0) {
+            System.out.println(name + " has no outstanding balance.");
+            return;
+        }
+
+        if (amount > billAmount) {
+            System.out.println("Payment cannot be greater than the current balance.");
+            return;
+        }
+
+        billAmount -= amount;
+        System.out.println(name + " paid $" + String.format("%.2f", amount)
+                + ". Remaining balance: $" + String.format("%.2f", billAmount));
+    }
+
+    @Override
+    public double getOutstandingBalance() {
+        return billAmount;
+    }
 }
