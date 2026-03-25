@@ -29,4 +29,84 @@ public class Patient implements Billable {
         this.diagnosis = "Not diagnosed";
         this.prescribedMedicine = "None";
     }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public double getBillAmount() {
+        return billAmount;
+    }
+
+    public boolean isAdmitted() {
+        return admitted;
+    }
+
+    public Doctor getAssignedDoctor() {
+        return assignedDoctor;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    public String getPrescribedMedicine() {
+        return prescribedMedicine;
+    }
+
+    public void setPatientId(String patientId) {
+        if (patientId != null && !patientId.trim().isEmpty()) {
+            this.patientId = patientId.trim();
+        } else {
+            System.out.println("Invalid patient ID.");
+        }
+    }
+
+    public void setName(String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            this.name = name.trim();
+        } else {
+            System.out.println("Invalid patient name.");
+        }
+    }
+
+    public void setAge(int age) {
+        if (age >= 0) {
+            this.age = age;
+        } else {
+            System.out.println("Age cannot be negative.");
+        }
+    }
+
+    public void setCondition(String condition) {
+        if (condition != null && !condition.trim().isEmpty()) {
+            this.condition = condition.trim();
+        } else {
+            System.out.println("Invalid condition.");
+        }
+    }
+
+    public void setBillAmount(double billAmount) {
+        if (billAmount >= 0) {
+            this.billAmount = billAmount;
+        } else {
+            System.out.println("Bill amount cannot be negative.");
+        }
+    }
+
+    public void setAdmitted(boolean admitted) {
+        this.admitted = admitted;
+    }
 }
