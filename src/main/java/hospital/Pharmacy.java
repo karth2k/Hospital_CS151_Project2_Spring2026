@@ -111,6 +111,21 @@ public class Pharmacy implements Billable {
     }
 
     /**
+     * Returns the unit price of the given medicine.
+     *
+     * @param medicine name of the medicine
+     * @return the unit price, or -1 if the medicine is not found
+     */
+    public double findMedicinePrice(String medicine) {
+        for (int i = 0; i < medicineCount; i++) {
+            if (medicineNames[i].equalsIgnoreCase(medicine)) {
+                return medicinePrices[i];
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Checks whether a medicine is available (quantity > 0).
      * Prints the current quantity to the console.
      *
