@@ -277,4 +277,99 @@ public class Hospital {
         System.out.println("Nurse " + nurse.getName() + " added to " + hospitalName + ".");
     }
 
+    public void scheduleAppointment(Patient patient, Doctor doctor, String date){
+        //Validates patient doctor and date and then schedules and appoiintment
+        if(patient == null) {
+            System.out.println("Cannot schedule an appointment for a null patient.");
+            return;
+        }
+
+        if(doctor == null) {
+            System.out.println("Cannot schedule an appointment with a null doctor.");
+            return;
+        }
+
+        if(date == null || date.trim().isEmpty()) {
+            System.out.println("Appointment date cannot be empty.");
+            return;
+        }
+
+        //if over 100 appointments exist then throw exception
+        if(appointmentCount >= MAX_OBJECTS) {
+            throw new MaxCapacityException("Appointment", MAX_OBJECTS);
+        }
+
+        //if doctor is unavailable throw error
+        if(!doctor.isAvailable()) {
+            throw new DoctorUnavailableException("Dr. " + doctor.getName() + " is currently unavailable.");
+        }
+
+        //if patient is unavailable throw error
+        if(!hasPatientId(patient.getPatientId())) {
+            System.out.println("Patient must be added to the hospital before scheduling.");
+            return;
+        }
+
+        if(!hasDoctorId(doctor.getEmployeeID())) {
+            System.out.println("Doctor must be added to the hospital before scheduling.");
+            return;
+        }
+
+        Appointment appointment = new Appointment(patient, doctor, date.trim());
+
+        //Doctor.takeAppointment() already checks availability, stores the appointment,
+        //auto-assigns the patient if needed, and calls appointment.schedule().
+        doctor.takeAppointment(appointment);
+
+        appointments[appointmentCount] = appointment;
+        appointmentCount++;
+
+        System.out.println("Appointment " + appointment.getAppointmentId() + " added to the hospital schedule.");
+    }
+
+    public Patient findPatient(String patientId) {
+        //finds patient and returns the patient
+        if (patientId == null || patientId.trim().isEmpty()) {
+            //if patient id does not exist or is empty then returns null and prints error
+            System.out.println("Patient ID cannot be empty.");
+            return null;
+        }
+
+        //finds patient in patient array and returns them
+        for (int i = 0; i < patientCount; i++) {
+            if (patients[i] != null && patients[i].getPatientId().equalsIgnoreCase(patientId.trim())) {
+                return patients[i];
+            }
+        }
+
+        //Throws error if patient not found
+        throw new PatientNotFoundException(patientId, true);
+    }
+
+    public void displayAllPatients() {
+        //Displays all the patients (through looping through patient array and printing their information using patient tostring)
+        if (patientCount == 0) {
+            System.out.println("No patients found.");
+            return;
+        }
+
+        System.out.println("------- All Patients -------");
+        for (int i = 0; i < patientCount; i++) {
+            System.out.println((i + 1) + ". " + patients[i]);
+        }
+    }
+
+    public void displayAllDoctors() {
+        //Displays all the doctors (through looping through doctor array and printing their information using doctor tostring)
+        if (doctorCount == 0) {
+            System.out.println("No doctors found.");
+            return;
+        }
+
+        System.out.println("------- All Doctors -------");
+        for (int i = 0; i < doctorCount; i++) {
+            System.out.println((i + 1) + ". " + doctors[i]);
+        }
+    }
+
 }
