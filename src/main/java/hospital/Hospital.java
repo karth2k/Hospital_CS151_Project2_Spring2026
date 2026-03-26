@@ -23,6 +23,28 @@ public class Hospital {
     private int nurseCount;                         //Amount of nurses
     private int appointmentCount;                   //Amount of appointments
 
+    //Constructor
+    public Hospital(String hospitalName, Pharmacy pharmacy){
+        //Constructor initializes all values. checks if hospital/pharmacy name is valid and if not gives it a dummy name
+        //initializes arrays to max object length of 100
+        this.hospitalName = (hospitalName != null && !hospitalName.trim().isEmpty()) ? hospitalName.trim() : "Unknown Hospital";
+        this.patients = new Patient[MAX_OBJECTS];
+        this.doctors = new Doctor[MAX_OBJECTS];
+        this.nurses = new Nurse[MAX_OBJECTS];
+        this.appointments = new Appointment[MAX_OBJECTS];
+        this.pharmacy = (pharmacy != null) ? pharmacy : new Pharmacy("CVS-001");
+        this.patientCount = 0;
+        this.doctorCount = 0;
+        this.nurseCount = 0;
+        this.appointmentCount = 0;
+    }
+
+    public Hospital(String hospitalName){
+        //if only the hospital name is provided the constructor creates a random pharmacy name and uses attribute assignments of other
+        //constructor using this keyword
+        this(hospitalName, new Pharmacy("CVS-001"));
+    }
+
     //Getters
     public String getHospitalName(){
         //gets the name of the hospital
@@ -127,6 +149,59 @@ public class Hospital {
         return false;
     }
 
+    private void removeAppointmentsForPatient(Patient patient) { //removes appointments belonging to a specific patient
+
+        // makes sure patient is valid
+        if (patient == null) {
+            return;
+        }
+
+        //loops through appointments array and removes matching appointments
+        for (int i = 0; i < appointmentCount; i++) {
+            if (appointments[i] != null && appointments[i].getPatient() == patient) {
+
+                if (appointments[i].getDoctor() != null) {
+                    appointments[i].getDoctor().removeAppointment(appointments[i]);
+                }
+
+                for (int j = i; j < appointmentCount - 1; j++) {
+                    appointments[j] = appointments[j + 1];
+                }
+
+                appointments[appointmentCount - 1] = null;
+                appointmentCount--;
+                i--;
+            }
+        }
+    }
+
+    private void removeAppointmentFromHospital(Appointment appointment) {
+        //removes one appointment from hospitals appointment array (clears history and allows for new appointments to be scheduled)
+        //makes sure appointment is valid
+        if(appointment == null) {
+            return;
+        }
+
+        //searches for the appointment in hospital appointments array
+        for(int i = 0; i < appointmentCount; i++) {
+            if(appointments[i] != null &&
+                    (appointments[i] == appointment || appointments[i].getAppointmentId() == appointment.getAppointmentId())) {
+
+                if(appointments[i].getDoctor() != null) {
+                    appointments[i].getDoctor().removeAppointment(appointments[i]);
+                }
+
+                for(int j = i; j < appointmentCount - 1; j++) {
+                    appointments[j] = appointments[j + 1];
+                }
+
+                appointments[appointmentCount - 1] = null;
+                appointmentCount--;
+                return;
+            }
+        }
+    }
+
     public Doctor findDoctor(String doctorId) {
         //Searches for and returns doctor object with matching doctor ID and if not found prints not found.
         //Also makes sure ID isnt null
@@ -213,6 +288,7 @@ public class Hospital {
                 if(removedPatient.getAssignedDoctor() != null) {
                     removedPatient.getAssignedDoctor().removePatient(removedPatient);
                 }
+                removeAppointmentsForPatient(removedPatient); //new helper function to remove all appointments associated with patient
 
                 //fixes array slots starting from slot patient was deletd
                 for(int j = i; j < patientCount - 1; j++) {
@@ -253,19 +329,54 @@ public class Hospital {
         System.out.println("Doctor " + doctor.getName() + " added to " + hospitalName + ".");
     }
 
+    public void removeDoctor(String doctorId) { //removes doctor using doctor ID
+        //makes sure doctor ID is not null or empty
+        if(doctorId == null || doctorId.trim().isEmpty()) {
+            System.out.println("Doctor ID cannot be empty.");
+            return;
+        }
+
+        //searches for matching doctor in doctors array
+        for(int i = 0; i < doctorCount; i++) {
+            if(doctors[i] != null && doctors[i].getEmployeeID().equalsIgnoreCase(doctorId.trim())) {
+                Doctor removedDoctor = doctors[i];
+
+                //if doctor still has patients or appointments cant be removed
+                if(removedDoctor.getPatientCount() > 0 || removedDoctor.getAppointmentCount() > 0) {
+                    System.out.println("Cannot remove Dr. " + removedDoctor.getName()
+                            + " because they still have assigned patients or scheduled appointments.");
+                    return;
+                }
+
+                //shifts all doctors left to fill the removed spot
+                for(int j = i; j < doctorCount - 1; j++) {
+                    doctors[j] = doctors[j + 1];
+                }
+
+                doctors[doctorCount - 1] = null;
+                doctorCount--;
+
+                System.out.println("Doctor " + removedDoctor.getName() + " removed from the hospital.");
+                return;
+            }
+        }
+        //if doctor is not found
+        System.out.println("Doctor with ID \"" + doctorId + "\" was not found.");
+    }
+
     public void addNurse(Nurse nurse) {
         //Adds nurse, makes sure its not null and also makes sure to throw exception if there are 100 nurses already
-        if (nurse == null) {
+        if(nurse == null) {
             System.out.println("Cannot add a null nurse.");
             return;
         }
 
-        if (nurseCount >= MAX_OBJECTS) {
+        if(nurseCount >= MAX_OBJECTS) {
             throw new MaxCapacityException("Nurse", MAX_OBJECTS);
         }
 
         //checks if nurse already exists in nurse array
-        if (hasNurseId(nurse.getEmployeeID())) {
+        if(hasNurseId(nurse.getEmployeeID())) {
             System.out.println("Nurse with ID " + nurse.getEmployeeID() + " already exists.");
             return;
         }
@@ -275,6 +386,34 @@ public class Hospital {
         nurseCount++;
 
         System.out.println("Nurse " + nurse.getName() + " added to " + hospitalName + ".");
+    }
+
+    public void removeNurse(String nurseId) { //removes nurse using nurse ID
+        //makes sure nurse ID is not null or empty
+        if(nurseId == null || nurseId.trim().isEmpty()) {
+            System.out.println("Nurse ID cannot be empty.");
+            return;
+        }
+
+        //searches for matching nurse in nurses array
+        for(int i = 0; i < nurseCount; i++) {
+            if(nurses[i] != null && nurses[i].getEmployeeID().equalsIgnoreCase(nurseId.trim())) {
+                Nurse removedNurse = nurses[i];
+
+                //shifts all nurses left to fill the removed spot
+                for(int j = i; j < nurseCount - 1; j++) {
+                    nurses[j] = nurses[j + 1];
+                }
+
+                nurses[nurseCount - 1] = null;
+                nurseCount--;
+
+                System.out.println("Nurse " + removedNurse.getName() + " removed from the hospital.");
+                return;
+            }
+        }
+
+        System.out.println("Nurse with ID \"" + nurseId + "\" was not found.");
     }
 
     public void scheduleAppointment(Patient patient, Doctor doctor, String date){
@@ -304,7 +443,7 @@ public class Hospital {
             throw new DoctorUnavailableException("Dr. " + doctor.getName() + " is currently unavailable.");
         }
 
-        //if patient is unavailable throw error
+        //if patient is not registered then do not schedule
         if(!hasPatientId(patient.getPatientId())) {
             System.out.println("Patient must be added to the hospital before scheduling.");
             return;
@@ -329,15 +468,15 @@ public class Hospital {
 
     public Patient findPatient(String patientId) {
         //finds patient and returns the patient
-        if (patientId == null || patientId.trim().isEmpty()) {
+        if(patientId == null || patientId.trim().isEmpty()) {
             //if patient id does not exist or is empty then returns null and prints error
             System.out.println("Patient ID cannot be empty.");
             return null;
         }
 
         //finds patient in patient array and returns them
-        for (int i = 0; i < patientCount; i++) {
-            if (patients[i] != null && patients[i].getPatientId().equalsIgnoreCase(patientId.trim())) {
+        for(int i = 0; i < patientCount; i++) {
+            if(patients[i] != null && patients[i].getPatientId().equalsIgnoreCase(patientId.trim())) {
                 return patients[i];
             }
         }
@@ -348,26 +487,26 @@ public class Hospital {
 
     public void displayAllPatients() {
         //Displays all the patients (through looping through patient array and printing their information using patient tostring)
-        if (patientCount == 0) {
+        if(patientCount == 0) {
             System.out.println("No patients found.");
             return;
         }
 
         System.out.println("------- All Patients -------");
-        for (int i = 0; i < patientCount; i++) {
+        for(int i = 0; i < patientCount; i++) {
             System.out.println((i + 1) + ". " + patients[i]);
         }
     }
 
     public void displayAllDoctors() {
         //Displays all the doctors (through looping through doctor array and printing their information using doctor tostring)
-        if (doctorCount == 0) {
+        if(doctorCount == 0) {
             System.out.println("No doctors found.");
             return;
         }
 
         System.out.println("------- All Doctors -------");
-        for (int i = 0; i < doctorCount; i++) {
+        for(int i = 0; i < doctorCount; i++) {
             System.out.println((i + 1) + ". " + doctors[i]);
         }
     }
@@ -401,58 +540,60 @@ public class Hospital {
         Patient patient = findPatient(patientId);
         Doctor doctor = findDoctor(doctorId);
 
-        if (patient != null && doctor != null) {
+        if(patient != null && doctor != null) {
             patient.assignDoctor(doctor);
         }
     }
 
     public void displayAllNurses() {
         //prints all nurses in the nurse array if more than 0
-        if (nurseCount == 0) {
+        if(nurseCount == 0) {
             System.out.println("No nurses found.");
             return;
         }
 
         System.out.println("------ All Nurses ------");
-        for (int i = 0; i < nurseCount; i++) {
+        for(int i = 0; i < nurseCount; i++) {
             System.out.println((i + 1) + ". " + nurses[i]);
         }
     }
 
     public void displayAllAppointments() {
         //prints all appointments in appointments array if there is more than 0
-        if (appointmentCount == 0) {
+        if(appointmentCount == 0) {
             System.out.println("No appointments found.");
             return;
         }
 
         System.out.println("------ All Appointments ------");
-        for (int i = 0; i < appointmentCount; i++) {
+        for(int i = 0; i < appointmentCount; i++) {
             appointments[i].viewDetails();
         }
     }
 
     public void cancelAppointment(int appointmentId) {
-        //finds and validates the appointment and returns it. then cancels the appointment
+        //finds and validates the appointment and returns it. then cancels the appointment and removes from active records
         Appointment appointment = findAppointment(appointmentId);
-        if (appointment != null) {
+        if(appointment != null) {
             appointment.cancel();
+            removeAppointmentFromHospital(appointment);
         }
     }
 
     public void rescheduleAppointment(int appointmentId, String newDate) {
         //finds and validates the appointment and returns it. then reschedueles it
         Appointment appointment = findAppointment(appointmentId);
-        if (appointment != null) {
+        if(appointment != null) {
             appointment.reschedule(newDate);
         }
     }
 
     public void completeAppointment(int appointmentId) {
-        //finds and validates the appointment and returns it, then marks as complete
+        //finds and validates the appointment and returns it, then marks as complete and removes from active records
         Appointment appointment = findAppointment(appointmentId);
-        if (appointment != null) {
+        if(appointment != null) {
             appointment.complete();
+            removeAppointmentFromHospital(appointment);
         }
     }
 
