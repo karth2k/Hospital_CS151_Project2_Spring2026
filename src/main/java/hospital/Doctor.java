@@ -149,6 +149,39 @@ public class Doctor extends Staff {
         }
     }
 
+    public void removeAppointment(Appointment appointment) {
+        //makes sure appointment is valid
+        if (appointment == null) {
+            System.out.println("Cannot remove a null appointment.");
+            return;
+        }
+
+        //searches for the appointment in this doctors appointment array
+        for (int i = 0; i < appointmentCount; i++) {
+            if (appointments[i] == appointment
+                    || appointments[i].getAppointmentId() == appointment.getAppointmentId()) {
+
+                //shifts appointments left to fill removed spot
+                for (int j = i; j < appointmentCount - 1; j++) {
+                    appointments[j] = appointments[j + 1];
+                }
+
+                appointments[appointmentCount - 1] = null;
+                appointmentCount--;
+
+                //if doctor has no more appointments, mark available again
+                if (appointmentCount == 0) {
+                    available = true;
+                }
+
+                System.out.println("Appointment " + appointment.getAppointmentId()
+                        + " removed from Dr. " + getName() + "'s schedule.");
+                return;
+            }
+        }
+
+        System.out.println("Appointment is not in Dr. " + getName() + "'s schedule.");
+    }
     // removes a patient from the doctor's list
     public void removePatient(Patient patient) {
         if (patient == null) {
@@ -304,6 +337,7 @@ public class Doctor extends Staff {
 
         appointments[appointmentCount] = appointment;
         appointmentCount++;
+        available = false;
         appointment.schedule();
 
         System.out.println("Dr. " + getName() + " accepted appointment "
