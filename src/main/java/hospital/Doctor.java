@@ -337,6 +337,7 @@ public class Doctor extends Staff {
 
         appointments[appointmentCount] = appointment;
         appointmentCount++;
+        available = false;
         appointment.schedule();
 
         System.out.println("Dr. " + getName() + " accepted appointment "
