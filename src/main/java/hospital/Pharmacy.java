@@ -87,6 +87,7 @@ public class Pharmacy implements Billable {
         if (medicine == null || medicine.isBlank()) {
             throw new IllegalArgumentException("Medicine name cannot be null or empty.");
         }
+        medicine = medicine.trim();
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0.");
         }
@@ -133,6 +134,7 @@ public class Pharmacy implements Billable {
         if (medicine == null || medicine.isBlank()) {
             throw new IllegalArgumentException("Medicine name cannot be null or empty.");
         }
+        medicine = medicine.trim();
         for (int i = 0; i < medicineCount; i++) {
             if (medicineNames[i].equalsIgnoreCase(medicine)) {
                 if (medicineQuantities[i] <= 0) {
@@ -144,6 +146,9 @@ public class Pharmacy implements Billable {
                 addCharge(price);
                 System.out.println("Dispensed " + medicine + " to " + patient.getName()
                         + ". Charge: $" + String.format("%.2f", price));
+                if (medicineQuantities[i] == 0) {
+                    System.out.println("Warning: " + medicine + " is now out of stock.");
+                }
                 return;
             }
         }
