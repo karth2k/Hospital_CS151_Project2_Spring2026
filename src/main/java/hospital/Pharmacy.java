@@ -292,6 +292,9 @@ public class Pharmacy implements Billable {
      */
     @Override
     public String toString() {
-        return "Pharmacy{id='" + pharmacyId + "', medicineCount=" + medicineCount + "}";
+        return "Pharmacy{id='" + pharmacyId + "', medicineCount=" + medicineCount
+                + ", totalRevenue=$" + String.format("%.2f", totalRevenue)
+                + ", totalExpenses=$" + String.format("%.2f", totalExpenses)
+                + ", balance=$" + String.format("%.2f", getOutstandingBalance()) + "}";
     }
 }
