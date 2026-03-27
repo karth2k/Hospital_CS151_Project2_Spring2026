@@ -8,8 +8,6 @@ package hospital;
  */
 public class Pharmacy implements Billable {
 
-
-
     private String pharmacyId;
     private String[] medicineNames;
     private int[] medicineQuantities;
