@@ -8,8 +8,6 @@ package hospital;
  */
 public class Pharmacy implements Billable {
 
-
-
     private String pharmacyId;
     private String[] medicineNames;
     private int[] medicineQuantities;
@@ -84,8 +82,15 @@ public class Pharmacy implements Billable {
      * @throws IllegalArgumentException if quantity is not positive
      */
     public void restockMedicine(String medicine, int quantity, double price) {
+        if (medicine == null || medicine.isBlank()) {
+            throw new IllegalArgumentException("Medicine name cannot be null or empty.");
+        }
+        medicine = medicine.trim();
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than 0.");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be negative.");
         }
         for (int i = 0; i < medicineCount; i++) {
             if (medicineNames[i].equalsIgnoreCase(medicine)) {
@@ -121,6 +126,13 @@ public class Pharmacy implements Billable {
      * @throws OutOfStockException if the medicine is out of stock or not found
      */
     public void dispenseMedicine(Patient patient, String medicine) {
+        if (patient == null) {
+            throw new IllegalArgumentException("Patient cannot be null.");
+        }
+        if (medicine == null || medicine.isBlank()) {
+            throw new IllegalArgumentException("Medicine name cannot be null or empty.");
+        }
+        medicine = medicine.trim();
         for (int i = 0; i < medicineCount; i++) {
             if (medicineNames[i].equalsIgnoreCase(medicine)) {
                 if (medicineQuantities[i] <= 0) {
@@ -132,6 +144,9 @@ public class Pharmacy implements Billable {
                 addCharge(price);
                 System.out.println("Dispensed " + medicine + " to " + patient.getName()
                         + ". Charge: $" + String.format("%.2f", price));
+                if (medicineQuantities[i] == 0) {
+                    System.out.println("Warning: " + medicine + " is now out of stock.");
+                }
                 return;
             }
         }
@@ -145,6 +160,9 @@ public class Pharmacy implements Billable {
      * @return the unit price, or -1 if the medicine is not found
      */
     public double findMedicinePrice(String medicine) {
+        if (medicine == null || medicine.isBlank()) {
+            return -1;
+        }
         for (int i = 0; i < medicineCount; i++) {
             if (medicineNames[i].equalsIgnoreCase(medicine)) {
                 return medicinePrices[i];
@@ -181,6 +199,10 @@ public class Pharmacy implements Billable {
      * @return true if available, false if out of stock or not found
      */
     public boolean checkAvailability(String medicine) {
+        if (medicine == null || medicine.isBlank()) {
+            System.out.println("Invalid medicine name.");
+            return false;
+        }
         for (int i = 0; i < medicineCount; i++) {
             if (medicineNames[i].equalsIgnoreCase(medicine)) {
                 System.out.println(medicine + " — available quantity: "
@@ -199,6 +221,10 @@ public class Pharmacy implements Billable {
      * @return true if the medicine was found and removed, false otherwise
      */
     public boolean removeMedicine(String medicine) {
+        if (medicine == null || medicine.isBlank()) {
+            System.out.println("Invalid medicine name.");
+            return false;
+        }
         for (int i = 0; i < medicineCount; i++) {
             if (medicineNames[i].equalsIgnoreCase(medicine)) {
                 for (int j = i; j < medicineCount - 1; j++) {
@@ -264,6 +290,9 @@ public class Pharmacy implements Billable {
      */
     @Override
     public String toString() {
-        return "Pharmacy{id='" + pharmacyId + "', medicineCount=" + medicineCount + "}";
+        return "Pharmacy{id='" + pharmacyId + "', medicineCount=" + medicineCount
+                + ", totalRevenue=$" + String.format("%.2f", totalRevenue)
+                + ", totalExpenses=$" + String.format("%.2f", totalExpenses)
+                + ", balance=$" + String.format("%.2f", getOutstandingBalance()) + "}";
     }
 }
