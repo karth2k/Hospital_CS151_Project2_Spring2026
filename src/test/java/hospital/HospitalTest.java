@@ -91,7 +91,46 @@ public class HospitalTest {
         assertThrows(PatientNotFoundException.class, () -> hospital.removePatient("Donovan Mitchell"));
     }
 
+    @Test
+    void addDoctorIncreasesDoctorCount() {
+        //simply checks if add doctor works as intended and increases the doctor count for hospital
+        Doctor doctor = makeDoctor("D001", "Dr Newton");
 
+        hospital.addDoctor(doctor);
+
+        assertEquals(1, hospital.getDoctorCount());
+    }
+
+    @Test
+    void removeDoctorWorksWhenSafe() {
+        //simply checks if remove doctor works as intended and increases the doctor count for hospital
+        Doctor doctor = makeDoctor("D001", "Dr Newton");
+
+        hospital.addDoctor(doctor);
+        hospital.removeDoctor("D001");
+
+        assertEquals(0, hospital.getDoctorCount());
+    }
+
+    @Test
+    void addNurseIncreasesNurseCount() {
+        //checks if when nurse is added the count of total nurses increases
+        Nurse nurse = makeNurse("N001", "Maya");
+
+        hospital.addNurse(nurse);
+
+        assertEquals(1, hospital.getNurseCount());
+    }
+
+    @Test
+    void removeNurseDecreasesNurseCount() {
+        //checks if when nurse is removed the count of total nurses decreases
+        Nurse nurse = makeNurse("N001", "Maya");
+
+        hospital.addNurse(nurse);
+
+        assertEquals(1, hospital.getNurseCount());
+    }
 
 
 
