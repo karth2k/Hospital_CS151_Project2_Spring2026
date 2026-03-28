@@ -10,6 +10,6 @@
 /httpRequests/
 .DS_Store
 .idea/
-*.iml
 target/
 out/
+.idea/workspace.xml
