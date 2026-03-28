@@ -7,7 +7,7 @@ public class Hospital {
      */
 
     //Max objects limit
-    public static final int MAX_OBJECTS = 100;
+    public static final int MAX_OBJECTS = 100;      //Only defined once
 
     //Attributes
     private String hospitalName;                    //Name of hospital

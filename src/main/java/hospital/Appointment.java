@@ -39,12 +39,12 @@ public class Appointment {
 
     public void schedule(){
         status = "Scheduled!";
-        System.out.println("Appointment " + appointmentId + " scheduled for " /* + patient.getName() */ + " with Dr. " /* + doctor.getName() */ + " on " + date);
+        System.out.println("Appointment " + appointmentId + " scheduled for "  + patient.getName()  + " with Dr. "  + doctor.getName()  + " on " + date);
     }
 
     public void cancel(){
         status = "Canceled";
-        System.out.println("Appointment " + appointmentId + " scheduled for " /* + patient.getName() */ + " with Dr. " /* + doctor.getName() */ + " on " + date + " has been canceled!");
+        System.out.println("Appointment " + appointmentId + " scheduled for "  + patient.getName()  + " with Dr. "  + doctor.getName()  + " on " + date + " has been canceled!");
     }
 
     public void reschedule(String newDate){
