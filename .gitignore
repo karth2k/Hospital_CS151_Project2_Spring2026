@@ -10,7 +10,6 @@
 /httpRequests/
 .DS_Store
 .idea/
-*.iml
 target/
 out/
 .gitignore
