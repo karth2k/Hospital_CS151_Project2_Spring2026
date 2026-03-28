@@ -37,17 +37,17 @@ public class Nurse extends Staff{
     }
 
     public void checkVitals(Patient patient){
-        System.out.println("Nurse "  + getName() + " is checking vitals for patient " /*+ patient.getName()*/);
+        System.out.println("Nurse "  + getName() + " is checking vitals for patient " + patient.getName());
         System.out.println("Vitals are stable.");
     }
 
     public void assistDoctor(Doctor doctor){
-        System.out.println("Nurse " + getName() + " assists Doctor " /*+ doctor.getName()*/ + " with procedure");
+        System.out.println("Nurse " + getName() + " assists Doctor " + doctor.getName() + " with procedure");
         System.out.println("Doctor successfully assisted!");
     }
 
     public void administerMedicine(Patient patient, String medicine){
-        System.out.println("Nurse " + getName() + " administers " + medicine + " for patient " /*+ patient.getName() */);
+        System.out.println("Nurse " + getName() + " administers " + medicine + " for patient " + patient.getName());
         System.out.println("Medicine administered!");
     }
 
