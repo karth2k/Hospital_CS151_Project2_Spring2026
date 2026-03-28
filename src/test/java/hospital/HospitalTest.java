@@ -128,8 +128,9 @@ public class HospitalTest {
         Nurse nurse = makeNurse("N001", "Maya");
 
         hospital.addNurse(nurse);
+        hospital.removeNurse("N001");
 
-        assertEquals(1, hospital.getNurseCount());
+        assertEquals(0, hospital.getNurseCount());
     }
 
     @Test
