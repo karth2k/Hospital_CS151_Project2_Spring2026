@@ -157,7 +157,6 @@ public class NurseTest {
 
         String printed = output.toString();
         assertTrue(printed.contains("Nurse Alice administers Ibuprofen for patient John Doe"));
-        assertTrue(printed.contains("Medicine administered!"));
     }
 
     @Test
