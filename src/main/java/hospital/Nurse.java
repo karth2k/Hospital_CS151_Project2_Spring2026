@@ -63,7 +63,11 @@ public class Nurse extends Staff{
 
     // gives medicine to a patient
     public void administerMedicine(Patient patient, String medicine){
+<<<<<<< HEAD
         System.out.println("Nurse " + getName() + " administers " + medicine + " for patient " + patient.getName() );
+=======
+        System.out.println("Nurse " + getName() + " administers " + medicine + " for patient " + patient.getName());
+>>>>>>> 1eece9b91c6d2bcc6ba819aa5e9768a4520fa0a7
         System.out.println("Medicine administered!");
     }
 
