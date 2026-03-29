@@ -55,21 +55,13 @@ public class Appointment {
     // schedules the appointment and updates its status
     public void schedule(){
         status = "Scheduled!";
-<<<<<<< HEAD
         System.out.println("Appointment " + appointmentId + " scheduled for " + patient.getName() + " with Dr. " + doctor.getName() + " on " + date);
-=======
-        System.out.println("Appointment " + appointmentId + " scheduled for "  + patient.getName()  + " with Dr. "  + doctor.getName()  + " on " + date);
->>>>>>> 1eece9b91c6d2bcc6ba819aa5e9768a4520fa0a7
     }
 
     // cancels the appointment and updates its status
     public void cancel(){
         status = "Canceled";
-<<<<<<< HEAD
         System.out.println("Appointment " + appointmentId + " scheduled for " + patient.getName() + " with Dr. "  + doctor.getName() + " on " + date + " has been canceled!");
-=======
-        System.out.println("Appointment " + appointmentId + " scheduled for "  + patient.getName()  + " with Dr. "  + doctor.getName()  + " on " + date + " has been canceled!");
->>>>>>> 1eece9b91c6d2bcc6ba819aa5e9768a4520fa0a7
     }
 
     // changes the appointment date
