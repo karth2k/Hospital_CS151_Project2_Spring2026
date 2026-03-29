@@ -9,6 +9,12 @@ import java.time.format.ResolverStyle;
 import java.util.Scanner;
 
 public class Main {
+    /*********************************************
+     * author: Sean Tadina
+     * id: 018950802
+     * username: @seantadina
+     *********************************************/
+
     // one scanner is used for the whole program
     private static final Scanner scanner = new Scanner(System.in);
 
